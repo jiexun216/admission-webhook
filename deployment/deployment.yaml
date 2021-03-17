@@ -17,7 +17,7 @@ spec:
       serviceAccount: admission-webhook-example-sa
       containers:
         - name: admission-webhook-example
-          image: jiexun/admission-webhook-example:v1
+          image: daocloud.io/daocloud/admission-webhook-example:latest
           imagePullPolicy: Always
           args:
             - -tlsCertFile=/etc/webhook/certs/certs.pem
