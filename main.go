@@ -18,20 +18,17 @@ func main() {
 
 	// get command line parameters
 	flag.IntVar(&parameters.port, "port", 443, "Webhook server port.")
-	/*flag.StringVar(&parameters.certFile, "tlsCertFile", "/etc/webhook/certs/certs.pem", "File containing the x509 Certificate for HTTPS.")
-	flag.StringVar(&parameters.keyFile, "tlsKeyFile", "/etc/webhook/certs/key.pem", "File containing the x509 private key to --tlsCertFile.")*/
+	flag.StringVar(&parameters.certFile, "tlsCertFile", "/etc/webhook/certs/certs.pem", "File containing the x509 Certificate for HTTPS.")
+	flag.StringVar(&parameters.keyFile, "tlsKeyFile", "/etc/webhook/certs/key.pem", "File containing the x509 private key to --tlsCertFile.")
 
-	flag.StringVar(&parameters.certFile, "tlsCertFile", "C:/jiexun/work/golang/project/crd/webhook/admission-webhook-example/certs/cert.pem", "File containing the x509 Certificate for HTTPS.")
-	flag.StringVar(&parameters.keyFile, "tlsKeyFile", "C:/jiexun/work/golang/project/crd/webhook/admission-webhook-example/certs/key.pem", "File containing the x509 private key to --tlsCertFile.")
+	/*flag.StringVar(&parameters.certFile, "tlsCertFile", "C:/jiexun/work/golang/project/crd/webhook/admission-webhook-example/certs/cert.pem", "File containing the x509 Certificate for HTTPS.")
+	flag.StringVar(&parameters.keyFile, "tlsKeyFile", "C:/jiexun/work/golang/project/crd/webhook/admission-webhook-example/certs/key.pem", "File containing the x509 private key to --tlsCertFile.")*/
 	flag.Parse()
-
-
 
 	pair, err := tls.LoadX509KeyPair(parameters.certFile, parameters.keyFile)
 	if err != nil {
 		glog.Errorf("Failed to load key pair: %v", err)
 	}
-
 
 	whsvr := &WebhookServer{
 		server: &http.Server{
