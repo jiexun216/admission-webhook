@@ -1,4 +1,4 @@
-package main
+package hook
 
 import (
 	"encoding/json"
@@ -66,14 +66,14 @@ const (
 )
 
 type WebhookServer struct {
-	server *http.Server
+	Server *http.Server
 }
 
 // Webhook Server parameters
 type WhSvrParameters struct {
-	port           int    // webhook server port
-	certFile       string // path to the x509 certificate for https
-	keyFile        string // path to the x509 private key matching `CertFile`
+	Port           int    // webhook server port
+	CertFile       string // path to the x509 certificate for https
+	KeyFile        string // path to the x509 private key matching `CertFile`
 	sidecarCfgFile string // path to sidecar injector configuration file
 }
 
@@ -317,7 +317,7 @@ func (whsvr *WebhookServer) mutate(ar *v1beta1.AdmissionReview) *v1beta1.Admissi
 }
 
 // Serve method for webhook server
-func (whsvr *WebhookServer) serve(w http.ResponseWriter, r *http.Request) {
+func (whsvr *WebhookServer) ServerHandle(w http.ResponseWriter, r *http.Request) {
 	var body []byte
 	if r.Body != nil {
 		if data, err := ioutil.ReadAll(r.Body); err == nil {

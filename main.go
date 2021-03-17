@@ -5,6 +5,7 @@ import (
 	"crypto/tls"
 	"flag"
 	"fmt"
+	"github.com/jiexun/admission-webhook/hook"
 	"net/http"
 	"os"
 	"os/signal"
@@ -14,38 +15,40 @@ import (
 )
 
 func main() {
-	var parameters WhSvrParameters
+	var parameters hook.WhSvrParameters
 
 	// get command line parameters
-	flag.IntVar(&parameters.port, "port", 443, "Webhook server port.")
-	flag.StringVar(&parameters.certFile, "tlsCertFile", "/etc/webhook/certs/certs.pem", "File containing the x509 Certificate for HTTPS.")
-	flag.StringVar(&parameters.keyFile, "tlsKeyFile", "/etc/webhook/certs/key.pem", "File containing the x509 private key to --tlsCertFile.")
+	flag.IntVar(&parameters.Port, "port", 443, "Webhook server port.")
+	/*flag.StringVar(&parameters.CertFile, "tlsCertFile", "/etc/webhook/certs/certs.pem", "File containing the x509 Certificate for HTTPS.")
+	flag.StringVar(&parameters.KeyFile, "tlsKeyFile", "/etc/webhook/certs/key.pem", "File containing the x509 private key to --tlsCertFile.")
+*/
+	flag.StringVar(&parameters.CertFile, "tlsCertFile", "C:/jiexun/work/golang/project/crd/webhook/admission-webhook-example/certs/cert.pem", "File containing the x509 Certificate for HTTPS.")
+	flag.StringVar(&parameters.KeyFile, "tlsKeyFile", "C:/jiexun/work/golang/project/crd/webhook/admission-webhook-example/certs/key.pem", "File containing the x509 private key to --tlsCertFile.")
 
-	/*flag.StringVar(&parameters.certFile, "tlsCertFile", "C:/jiexun/work/golang/project/crd/webhook/admission-webhook-example/certs/cert.pem", "File containing the x509 Certificate for HTTPS.")
-	flag.StringVar(&parameters.keyFile, "tlsKeyFile", "C:/jiexun/work/golang/project/crd/webhook/admission-webhook-example/certs/key.pem", "File containing the x509 private key to --tlsCertFile.")*/
+
 	flag.Parse()
 
-	pair, err := tls.LoadX509KeyPair(parameters.certFile, parameters.keyFile)
+	pair, err := tls.LoadX509KeyPair(parameters.CertFile, parameters.KeyFile)
 	if err != nil {
 		glog.Errorf("Failed to load key pair: %v", err)
 	}
 
-	whsvr := &WebhookServer{
-		server: &http.Server{
-			Addr:      fmt.Sprintf(":%v", parameters.port),
+	whsvr := &hook.WebhookServer{
+		Server: &http.Server{
+			Addr:      fmt.Sprintf(":%v", parameters.Port),
 			TLSConfig: &tls.Config{Certificates: []tls.Certificate{pair}},
 		},
 	}
 
 	// define http server and server handler
 	mux := http.NewServeMux()
-	mux.HandleFunc("/mutate", whsvr.serve)
-	mux.HandleFunc("/validate", whsvr.serve)
-	whsvr.server.Handler = mux
+	mux.HandleFunc("/mutate", whsvr.ServerHandle)
+	mux.HandleFunc("/validate", whsvr.ServerHandle)
+	whsvr.Server.Handler = mux
 
 	// start webhook server in new routine
 	go func() {
-		if err := whsvr.server.ListenAndServeTLS("", ""); err != nil {
+		if err := whsvr.Server.ListenAndServeTLS("", ""); err != nil {
 			glog.Errorf("Failed to listen and serve webhook server: %v", err)
 		}
 	}()
@@ -58,5 +61,5 @@ func main() {
 	<-signalChan
 
 	glog.Infof("Got OS shutdown signal, shutting down webhook server gracefully...")
-	whsvr.server.Shutdown(context.Background())
+	whsvr.Server.Shutdown(context.Background())
 }
