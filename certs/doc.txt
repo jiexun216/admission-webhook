@@ -11,9 +11,16 @@ http://ml-8b08f98e-d95.apps.dce.daocloud.local/
 账号/密码  admin/admin
 kubectl -n cdp-cxy-cml-1-user-1 get po
 
+玩转K8S AdmissionWebhook
+https://cloud.tencent.com/developer/article/1445760
+https://medium.com/ovni/writing-a-very-basic-kubernetes-mutating-admission-webhook-398dbbcb63ec
+
 
 env:
             - name: POD_NAMESPACE
               valueFrom:
                 fieldRef:
                   fieldPath: metadata.namespace
+
+
+
