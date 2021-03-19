@@ -20,7 +20,7 @@ spec:
           image: daocloud.io/daocloud/admission-webhook-example:latest
           imagePullPolicy: Always
           args:
-            - -tlsCertFile=/etc/webhook/certs/certs.pem
+            - -tlsCertFile=/etc/webhook/certs/cert.pem
             - -tlsKeyFile=/etc/webhook/certs/key.pem
             - -alsologtostderr
             - -v=4

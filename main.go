@@ -19,7 +19,7 @@ func main() {
 
 	// get command line parameters
 	flag.IntVar(&parameters.Port, "port", 443, "Webhook server port.")
-	flag.StringVar(&parameters.CertFile, "tlsCertFile", "/etc/webhook/certs/certs.pem", "File containing the x509 Certificate for HTTPS.")
+	flag.StringVar(&parameters.CertFile, "tlsCertFile", "/etc/webhook/certs/cert.pem", "File containing the x509 Certificate for HTTPS.")
 	flag.StringVar(&parameters.KeyFile, "tlsKeyFile", "/etc/webhook/certs/key.pem", "File containing the x509 private key to --tlsCertFile.")
 
 	//flag.StringVar(&parameters.CertFile, "tlsCertFile", "C:/jiexun/work/golang/project/crd/webhook/admission-webhook-example/certs/cert.pem", "File containing the x509 Certificate for HTTPS.")
